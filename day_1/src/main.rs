@@ -25,10 +25,24 @@ fn main() {
     else {
         println!("Where is the damn file");
     }
+    println!("Password {count}");
 }
 
-fn move_dial(current_dial: i32, next_move: str) -> i32 {
-    if next_move.starts_with('R') {
+fn move_dial(current_dial: i32, mut next_move: String) -> i32 {
+    let is_right: bool = if next_move.starts_with('R') {true} else {false};
+    next_move.remove(0);
+    let move_count: i32 = next_move.parse().expect("Not a number");
+    if is_right == true {
+        let mut new_dial: i32 = current_dial + move_count;
+        while new_dial > 99 {
+            new_dial -= 100;
+        }
+        return new_dial;
     }
+    let mut new_dial: i32 = current_dial - move_count;
+    while new_dial < 0 {
+        new_dial += 100;
+    }
+    new_dial
 }
 
