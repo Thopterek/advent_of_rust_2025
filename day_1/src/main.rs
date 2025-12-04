@@ -18,9 +18,9 @@ fn main() {
     if let Ok(lines) = read_lines("../input/rotation.txt") {
         for line in lines.map_while(Result::ok) {
             wrapper = move_dial(wrapper[0], line, wrapper[1]);
-            if wrapper[0] == 0 {
-                wrapper[1] += 1;
-            }
+            //if wrapper[0] == 0 {
+            //    wrapper[1] += 1;
+            //}
         }
     }
     else {
