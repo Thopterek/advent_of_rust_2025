@@ -10,7 +10,7 @@ fn reader<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> where P:
 fn main() {
     println!("Day 3!");
     let mut sum: u64 = 0;
-    if let Ok(lines) = reader("../input/example.txt") {
+    if let Ok(lines) = reader("../input/puzzle.txt") {
         for line in lines.map_while(Result::ok) {
             println!("Line -> {}", line);
             sum += joltage(line);
