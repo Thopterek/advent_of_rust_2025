@@ -12,7 +12,7 @@ where P: AsRef<Path>, {
 fn main() {
     println!("Day 2, lets goooo");
     let mut sum: u64 = 0;
-    if let Ok(lines) = read_lines("../input/test.txt") {
+    if let Ok(lines) = read_lines("../input/puzzle.txt") {
         for line in lines.map_while(Result::ok) {
             let parts = line.split(",");
             for sequence in parts {
@@ -32,12 +32,14 @@ fn get_repeat(sequence: &str) -> u64 {
     let start: u64 = range_s.parse().expect("Not a number?");
     let end: u64 = r_end.parse().expect("Not a number?");
     let mut sum: u64 = 0;
-    let regex = Regex::new(r"^(\w+) (\1)$").unwrap();
+    // thank you fancy_regex documentation <3
+    // for part two just added the +
+    let regex = Regex::new(r"^(\d+)\1+$").unwrap();
     let mut counter = start;
     while counter <= end {
         let to_check: &str = &counter.to_string();
         let result = regex.is_match(to_check);
-        if result.is_ok() {
+        if result.unwrap() {
             let add: u64 = to_check.parse().expect("Not a num");
             println!("To add value is -> {add}");
             sum += add;
