@@ -59,6 +59,9 @@ fn move_dial(current_dial: i32, mut next_move: String, current_count: i32) -> [i
         new_dial += 100;
         new_count += 1;
     }
+    if new_dial == 0 {
+        new_count += 1;
+    }
     println!("Dial points at -> {new_dial} count is {new_count}");
     let new_wrapper: [i32; 2] = [new_dial, new_count];
     new_wrapper
