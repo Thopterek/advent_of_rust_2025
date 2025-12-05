@@ -30,6 +30,7 @@ fn main() {
 }
 
 fn move_dial(current_dial: i32, mut next_move: String, current_count: i32) -> [i32; 2] {
+    print!("Move -> {next_move} ");
     let is_right: bool = if next_move.starts_with('R') {true} else {false};
     next_move.remove(0);
     let move_count: i32 = next_move.parse().expect("Not a number");
@@ -40,14 +41,25 @@ fn move_dial(current_dial: i32, mut next_move: String, current_count: i32) -> [i
             new_dial -= 100;
             new_count += 1;
         }
+        println!("Dial points at -> {new_dial} count is {new_count}");
         let new_wrapper: [i32; 2] = [new_dial, new_count];
         return new_wrapper;
     }
     let mut new_dial: i32 = current_dial - move_count;
+    if new_dial == 0 {
+        new_count += 1;
+        println!("Dial points at -> {new_dial} count is {new_count}");
+        let new_wrapper: [i32; 2] = [new_dial, new_count];
+        return new_wrapper;
+    }
+    if current_dial == 0 {
+        new_count -= 1;
+    }
     while new_dial < 0 {
         new_dial += 100;
         new_count += 1;
     }
+    println!("Dial points at -> {new_dial} count is {new_count}");
     let new_wrapper: [i32; 2] = [new_dial, new_count];
     new_wrapper
 }
