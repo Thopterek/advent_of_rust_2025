@@ -42,38 +42,57 @@ fn main() {
     println!("Rolls to be picked up -> {rolls}");
 }
 
-fn count_adjecent(arr: Vec<bool>, index: usize, max_index: usize, row: usize, width: usize, height: usize) -> usize {
+fn count_adjecent(arr: Vec<bool>, index: usize, row: usize, width: usize, height: usize) -> usize {
     let mut count: usize = 0;
     let row_max: usize = (row + 1) * width;
-    if index - 1 <= 0 {
+    let row_min: isize = (row * width).try_into().unwrap();
+    /*
+     * The easy checks
+     * left <---> right
+    */
+    let convert_index: isize = (index).try_into().unwrap();
+    let check_left: isize = convert_index - 1;
+    if check_left >= row_min {
         if arr[index - 1] == true {
             count += 1;
         }
     }
-    if index + 1 <= row_max {
+    if index + 1 < row_max {
         if arr[index + 1] == true {
             count += 1;
         }
     }
     if row > 0 {
-        if arr[index - (width)] == true {
+        // checking up
+        let up_max: isize = (((row - 1) * width) + width).try_into().unwrap();
+        let up_min: isize = ((row - 1) * width).try_into().unwrap();
+        let check_up: isize = (index - width).try_into().unwrap();
+        if arr[index - width] == true {
             count += 1;
         }
-        if index - (width - 1) >= 0 && arr[index - (width - 1)] == true {
+        // up left
+        if up_min <= check_up - 1 && arr[index - width - 1] == true {
             count += 1;
         }
-        if index + 1 - width < row_max && arr[index + 1 - width] == true {
+        // up right
+        if check_up + 1 < up_max && arr[index + 1 - width] == true {
             count += 1;
         }
     }
-    if row < height {
-        if index + width < max_index && arr[index + width] == true {
+    if row < height - 1 {
+        // checking down
+        let down_max: isize = (((row + 1) * width) + width).try_into().unwrap();
+        let check_down: isize = (index + width).try_into().unwrap();
+        let down_min: isize = ((row + 1) * width).try_into().unwrap();
+        if arr[index + width] == true {
             count += 1;
         }
-        if index + width + 1 <= max_index && arr[index + width + 1] == true {
+        // down right
+        if check_down + 1 < down_max && arr[index + width + 1] == true {
             count += 1;
         }
-        if index + width - 1 <= (row * width) && arr[index + width - 1] == true {
+        // down left
+        if check_down - 1 >= down_min && arr[index + width - 1] == true {
             count += 1;
         }
     }
@@ -100,7 +119,7 @@ fn count_rolls(arr: Vec<bool>, width: usize, height: usize) -> usize {
     for roll_or_not in arr.clone() {
         if roll_or_not == true {
             let last = rolls;
-            rolls += free_to_take(count_adjecent(arr.clone(), index, width * height, row, width, height));
+            rolls += free_to_take(count_adjecent(arr.clone(), index, row, width, height));
             if last != rolls {
                 print!("X");
             }
