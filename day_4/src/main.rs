@@ -12,8 +12,8 @@ fn reader<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> where P:
  * through usage that row * c_width -> first index
 */
 fn main() {
-    let mut rolls: usize = 0;
-    if let Ok(lines) = reader("../input/example.txt") {
+    let mut total_rolls: usize = 0;
+    if let Ok(lines) = reader("../input/puzzle.txt") {
         let mut counter_h: usize = 0;
         let mut c_width: usize = 0;
         for line in lines.map_while(Result::ok) {
@@ -25,21 +25,29 @@ fn main() {
         }
         println!("Height -> {counter_h}, Width -> {c_width}");
         let mut arr: Vec<bool> = vec![false; counter_h * c_width];
-        if let Ok(lines) = reader("../input/example.txt") {
+        if let Ok(lines) = reader("../input/puzzle.txt") {
             let mut row: usize = 0;
             println!("Compare to filled out arr");
             for line in lines.map_while(Result::ok) {
                 arr = fillout_arr(line, row, arr, c_width);
                 row += 1;
             }
-            rolls = count_rolls(arr, c_width, counter_h);
+            loop {
+                let tuple: (usize, Vec<bool>) = count_rolls(arr.clone(), c_width, counter_h);
+                let rolls = tuple.0;
+                arr = tuple.1;
+                if rolls == 0 {
+                    break;
+                }
+                total_rolls += rolls;
+            }
         }
     }
     else {
         println!("Run from src folder, should be fine");
     }
     println!("");
-    println!("Rolls to be picked up -> {rolls}");
+    println!("Rolls to be picked up -> {total_rolls}");
 }
 
 fn count_adjecent(arr: Vec<bool>, index: usize, row: usize, width: usize, height: usize) -> usize {
@@ -108,7 +116,7 @@ fn free_to_take(counted: usize) -> usize {
     roll
 }
 
-fn count_rolls(arr: Vec<bool>, width: usize, height: usize) -> usize {
+fn count_rolls(arr: Vec<bool>, width: usize, height: usize) -> (usize, Vec<bool>) {
     let mut rolls: usize = 0;
     let mut row: usize = 0;
     let mut index: usize = 0;
@@ -116,18 +124,22 @@ fn count_rolls(arr: Vec<bool>, width: usize, height: usize) -> usize {
     println!("------------------");
     println!("Checking the array");
     println!("------------------");
+    let mut new_arr: Vec<bool> = arr.clone();
     for roll_or_not in arr.clone() {
         if roll_or_not == true {
             let last = rolls;
             rolls += free_to_take(count_adjecent(arr.clone(), index, row, width, height));
             if last != rolls {
+                new_arr[index] = false;
                 print!("X");
             }
             else {
+                new_arr[index] = true;
                 print!("@");
             }
         }
         else {
+            new_arr[index] = false;
             print!(".");
         }
         index += 1;
@@ -136,7 +148,7 @@ fn count_rolls(arr: Vec<bool>, width: usize, height: usize) -> usize {
             row += 1;
         }
     }
-    rolls
+    (rolls, new_arr)
 }
 
 fn fillout_arr(s: String, row: usize, mut arr: Vec<bool>, width: usize) -> Vec<bool> {
