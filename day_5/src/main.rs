@@ -11,7 +11,7 @@ where P: AsRef<Path>, {
 fn main() {
     println!("FRESH WESH");
     let mut fresh: usize = 0;
-    if let Ok(lines) = reader("../input/puzzle.txt") {
+    if let Ok(lines) = reader("../input/example.txt") {
         let mut ranges: Vec<usize> = vec![];
         let mut start_checking: bool = false;
         for line in lines.map_while(Result::ok) {
@@ -24,22 +24,22 @@ fn main() {
                 ranges.push(end);
             }
             if start_checking == true {
-                let converted: usize = line.parse().expect("A NUMBER");
-                let mut index = 0;
-                while index < ranges.len() {
-                    if converted >= ranges[index] && converted <= ranges[index + 1] {
-                        fresh += 1;
-                        break;
-                    }
-                    index += 2;
-                }
+                let mut index: usize = 0;
             }
             if line.is_empty() == true {
                 start_checking = true;
-                // added for part 2
-                break;
             }
         }
     }
     println!("Fresh ingridents -> {}", fresh);
 }
+// part used in start_checking for part 1
+//            if start_checking == true {
+//                let converted: usize = line.parse().expect("A NUMBER");
+//                let mut index = 0;
+//                while index < ranges.len() {
+//                    if converted >= ranges[index] && converted <= ranges[index + 1] {
+//                        fresh += 1;
+//                        break;
+//                   }
+//                   index += 2;
