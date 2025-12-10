@@ -14,32 +14,30 @@ fn main() {
     let mut fresh: usize = 0;
     if let Ok(lines) = reader("../input/puzzle.txt") {
         let mut ranges: Vec<usize> = vec![];
-        let mut start_checking: bool = false;
+        // let mut start_checking: bool = false;
         for line in lines.map_while(Result::ok) {
             println!("{}", line);
-            if start_checking == false && line.is_empty() == false {
+            if line.is_empty() == false {
                 let range = line.split_once("-");
                 let start: usize = range.unwrap().0.parse().expect("A NUMBER");
                 let end: usize = range.unwrap().1.parse().expect("A NUMBER");
-                for i in start..end + 1 {
-                    ranges.push(i);
-                    println!("pushed {i}");
-                }
+                ranges.push(start);
+                ranges.push(end);
                 // ranges.push(start);
                 // ranges.push(end);
             }
-            if start_checking == true {
+            // if start_checking == true {
                 // nevermind I don't think it will be needed
-                let mut index: usize = 0;
-                while index < ranges.len() {
-                    fresh += (ranges[index + 1] + 1) - ranges[index];
-                    println!("fresh now is {fresh}");
-                    index += 2;
-                }
-                break;
-            }
+            //    let mut index: usize = 0;
+            //    while index < ranges.len() {
+            //        fresh += (ranges[index + 1] + 1) - ranges[index];
+            //        println!("fresh now is {fresh}");
+            //        index += 2;
+            //    }
+            //    break;
+            //}
             if line.is_empty() == true {
-                start_checking = true;
+                // start_checking = true;
                 fresh += remove_dups(ranges);
                 break;
             }
