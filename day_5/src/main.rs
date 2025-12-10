@@ -36,6 +36,8 @@ fn main() {
             }
             if line.is_empty() == true {
                 start_checking = true;
+                // added for part 2
+                break;
             }
         }
     }
