@@ -94,6 +94,8 @@ fn main() {
                         cleaned.push(ranges[index]);
                         cleaned.push(ranges[index + 1]);
                     }
+                    // case if it overlaps from the bottom
+                    // else if 
                     index += 2;
                 }
                 for i in cleaned {
