@@ -10,16 +10,19 @@ where P: AsRef<Path>, {
 
 fn main() {
     println!("Hello, world!");
-    if let Ok(lines) = reader("../input/example.txt") {
+    let mut result: usize = 0;
+    if let Ok(lines) = reader("../input/puzzle.txt") {
         let mut arr: Vec<usize> = vec![];
         let mut rows: usize = 0;
         for line in lines.map_while(Result::ok) {
             println!("{}", line);
             let individual = line.split(" ");
             if line.contains("+") {
+                let bytes = line.as_bytes();
                 let mut start: usize = 0;
                 let mut index: usize = 0;
                 let mut counter: usize = 0;
+                let mut sign_counter: usize = 0;
                 let vector_len = arr.len();
                 let collumns = vector_len / rows;
                 let mut one_coll = vec![];
@@ -33,6 +36,33 @@ fn main() {
                             print!("{} ", i);
                         }
                         println!("<- one collumn");
+                        let mut found: usize = 0;
+                        for (_c, &item) in bytes.iter().enumerate() {
+                            if item == b'*' || item == b'+' {
+                                if found == sign_counter {
+                                    let mut tmp_result = 0;
+                                    if item == b'*' {
+                                        let mut first: bool = true;
+                                        for i in &one_coll {
+                                            if first == true {
+                                                first = false;
+                                                tmp_result += i;
+                                            }
+                                            else {
+                                                tmp_result *= i;
+                                            }
+                                        }
+                                    }
+                                    else if item == b'+' {
+                                        for i in &one_coll {
+                                            tmp_result += i;
+                                        }
+                                    }
+                                    result += tmp_result;
+                                }
+                                found += 1;
+                            }
+                        }
                         one_coll.clear();
                         counter = 0;
                         start += 1;
@@ -40,6 +70,7 @@ fn main() {
                             break;
                         }
                         index = start;
+                        sign_counter += 1;
                     }
                 }
             }
@@ -58,4 +89,5 @@ fn main() {
     else {
         println!("Where is the file?");
     }
+    println!("Result -> {}", result);
 }
