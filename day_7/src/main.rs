@@ -11,26 +11,41 @@ where P: AsRef<Path>, {
 fn main() {
     let mut result: usize = 0;
     if let Ok(lines) = reader("../input/example.txt") {
-        let mut arr: Vec<bool> = vec![];
-        let mut start: usize = 0;
-        let mut collumn: usize = 0;
+        let mut next_index: Vec<usize> = vec![];
+        let mut even: bool = true;
         for line in lines.map_while(Result::ok) {
-            if collumn == 0 {
-                collumn = line.len();
-            }
             let bytes = line.as_bytes();
+            if even == false {
+                // print!(" -> added {}", next_index.len());
+                println!("");
+                // result += next_index.len();
+            }
             for (i, &item) in bytes.iter().enumerate() {
                 if item == b'.' {
-                    arr.push(false);
+                    print!(".");
                 }
                 else if item == b'^' {
-                    arr.push(true);
+                    next_index.retain(|value| *value != i);
+                    if next_index.contains(&(i - 1)) == false {
+                        next_index.push(i - 1);
+                    }
+                    if next_index.contains(&(i + 1)) == false {
+                        next_index.push(i + 1);
+                    }
+                    print!("^");
                 }
                 else if item == b'S' {
-                    start = i;
-                    println!("Start at -> {}", start);
+                    next_index.push(i);
+                    print!("S");
                 }
             }
+            if even == true {
+                even = false;
+            }
+            else {
+                even = true;
+            }
+            println!("");
         }
     }
     else {
