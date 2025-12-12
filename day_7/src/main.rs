@@ -10,7 +10,7 @@ where P: AsRef<Path>, {
 
 fn main() {
     let mut result: usize = 0;
-    if let Ok(lines) = reader("../input/example.txt") {
+    if let Ok(lines) = reader("../input/puzzle.txt") {
         let mut next_index: Vec<usize> = vec![];
         let mut even: bool = true;
         for line in lines.map_while(Result::ok) {
@@ -24,7 +24,7 @@ fn main() {
                 if item == b'.' {
                     print!(".");
                 }
-                else if item == b'^' {
+                else if item == b'^' && next_index.contains(&i) {
                     next_index.retain(|value| *value != i);
                     if next_index.contains(&(i - 1)) == false {
                         next_index.push(i - 1);
@@ -33,6 +33,7 @@ fn main() {
                         next_index.push(i + 1);
                     }
                     print!("^");
+                    result += 1;
                 }
                 else if item == b'S' {
                     next_index.push(i);
